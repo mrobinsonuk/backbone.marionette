@@ -155,6 +155,30 @@ describe('collection view', function() {
     });
   });
 
+  describe('when rendering a collection view and accessing children via the DOM', function() {
+    beforeEach(function() {
+      var suite = this;
+
+      this.CollectionView = this.MockCollectionView.extend({
+        onRenderCollection: function() {
+          this.onRenderChildCount = this.$(suite.ChildView.prototype.tagName).length;
+        }
+      });
+
+      this.collection     = new Backbone.Collection([{foo: 'bar'}, {foo: 'baz'}]);
+
+      this.collectionView = new this.CollectionView({
+        collection: this.collection
+      });
+
+      this.collectionView.render();
+    });
+
+    it('should find the expected number of childen', function() {
+      expect(this.collectionView.onRenderChildCount).to.equal(this.collection.length);
+    });
+  });
+
   describe('when rendering a collection view without a collection', function() {
     beforeEach(function() {
       this.collectionView = new this.MockCollectionView();
